@@ -1,0 +1,46 @@
+Name: harbour-mediabulary
+Summary: Mediabulary
+Version: 0.1
+Release: 1
+Group: Qt/Qt
+License: GPLv3 except for the icon
+Sources:
+- '%{name}-%{version}.tar.bz2'
+Description: |-
+  The foundation of news is content. To understand the content you need vocabulary.
+Configure: none
+Builder: qtc5
+PkgConfigBR:
+- Qt5Core
+- Qt5Qml
+- Qt5Quick
+- sailfishapp
+
+Requires:
+- libsailfishapp
+Files:
+# Do not include whole %{_datadir}/applications as that would include tests too
+- '%defattr(0644,root,root,0755)'
+- '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
+- '%{_datadir}/applications/%{name}.desktop'
+- '%{_datadir}/%{name}/qml'
+
+- '%attr(0755,-,-) %{_bindir}/%{name}'
+PkgBR: []
+
+SubPackages:
+    - Name: test
+      Summary: Tests for the Mediabulary
+      Group: Qt/Qt
+      Description: |-
+        Tests package for the Mediabulary
+      AutoDepend: true
+      PkgConfigBR:
+      - Qt5QuickTest
+      Requires:
+      - qt5-qtdeclarative-import-qttest
+      Files:
+        - '%{_bindir}/tst-harbour-mediabulary'
+        - '%{_datadir}/tst-harbour-mediabulary/*.qml'
+        # Script for starting tests on emulator and device
+        - '%{_datadir}/tst-harbour-mediabulary/*.sh'
