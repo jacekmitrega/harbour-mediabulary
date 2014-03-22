@@ -18,6 +18,7 @@ OTHER_FILES = \
     ../rpm/harbour-mediabulary.spec \
     qml/main.qml \
     qml/pages/Mediabulary.qml \
-    qml/cover/CoverPage.qml
+    qml/cover/CoverPage.qml \
+    qml/pages/SearchDialog.qml
 
 INCLUDEPATH += $$PWD

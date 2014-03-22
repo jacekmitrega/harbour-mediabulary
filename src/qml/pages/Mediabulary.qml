@@ -21,24 +21,77 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Sailfish.Silica 1.0
+import QtQuick.XmlListModel 2.0
 
 
 Page {
     id: page
 
-    Column {
+    property string searchQuery: "Fußball"
+
+    XmlListModel {
+        id: watchmiModel
+        source: !page.searchQuery ? ""
+                                  : "http://hackathon.lab.watchmi.tv/api/example.com/broadcasts/limit/12/format/xml-ptv/query/"
+                                    + page.searchQuery
+        namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/epg';"
+        query: "/pack/data"
+
+        XmlRole { name: "title"; query: "tit/string()" }
+        XmlRole { name: "description"; query: "losyn/string()" }
+    }
+
+    SilicaListView {
+        id: itemListView
+
         anchors.fill: parent
 
-        PageHeader {
+        ScrollDecorator { }
+
+        PullDownMenu {
+            MenuItem {
+                text: qsTr('Search')
+                onClicked: {
+                    var dlg = pageStack.push(Qt.resolvedUrl("SearchDialog.qml"),
+                                             { text: searchQuery });
+                    dlg.accepted.connect(function () {
+                        searchQuery = dlg.text;
+                    });
+                }
+            }
+        }
+
+        header: PageHeader {
             title: qsTr("Mediabulary")
         }
 
-        TextField {
-            id: searchQuery
-            placeholderText: qsTr("Search query")
+        model: watchmiModel
 
-            width: parent.width
+        delegate: ListItem {
+            width: itemListView.width - Theme.paddingMedium * 2
+            x: Theme.paddingMedium
+            contentHeight: Theme.itemSizeExtraLarge
+
+            Column {
+                width: parent.width
+
+                Label {
+                    width: parent.width
+                    color: Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    text: title
+                }
+                Label {
+                    width: parent.width
+                    color: Theme.secondaryColor
+                    elide: Text.ElideRight
+                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    maximumLineCount: 3
+                    font.pixelSize: Theme.fontSizeExtraSmall
+                    text: description
+                }
+            }
         }
-
     }
+
 }
