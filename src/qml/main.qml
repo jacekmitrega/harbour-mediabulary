@@ -30,4 +30,6 @@ ApplicationWindow
         id: mediabularyMainComponent
         Mediabulary { }
     }
+
+    cover: Qt.resolvedUrl("cover/CoverPage.qml")
 }
