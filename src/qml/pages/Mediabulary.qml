@@ -26,4 +26,19 @@ import Sailfish.Silica 1.0
 Page {
     id: page
 
+    Column {
+        anchors.fill: parent
+
+        PageHeader {
+            title: qsTr("Mediabulary")
+        }
+
+        TextField {
+            id: searchQuery
+            placeholderText: qsTr("Search query")
+
+            width: parent.width
+        }
+
+    }
 }
