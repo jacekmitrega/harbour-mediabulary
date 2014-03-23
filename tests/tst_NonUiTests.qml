@@ -46,7 +46,50 @@ TestCase {
         id: mediabulary
     }
 
-    function test_nothing() {
+    function test_getTitles() {
+        compare(mediabulary.getTitles("A", "B", "C", "D"),
+                ["A", "C"],
+                "Deu title and extra info subtitle should be selected");
+        compare(mediabulary.getTitles("A", "", "C", ""),
+                ["A", "C"],
+                "Deu title and extra info subtitle should be selected");
+        compare(mediabulary.getTitles("", "B", "", "D"),
+                ["B", "D"],
+                "Und title and description subtitle should be selected");
+        compare(mediabulary.getTitles("A", "B", "", ""),
+                ["A", ""],
+                "Deu title and no subtitle should be selected");
+        compare(mediabulary.getTitles("", "", "C", "D"),
+                ["C", "D"],
+                "Extra info title and description subtitle should be selected");
+        compare(mediabulary.getTitles("", "B", "", ""),
+                ["B", ""],
+                "Und title and no subtitle should be selected");
+        compare(mediabulary.getTitles("", "", "C", ""),
+                ["C", ""],
+                "Extra info title and no subtitle should be selected");
+        compare(mediabulary.getTitles("", "", "", "D"),
+                ["D", "D"],
+                "Both description title and subtitle should be selected");
+    }
+
+    function test_getLocaleDate() {
+        var date = new Date();
+        compare(typeof mediabulary.getLocaleDate(date), "string",
+                "should return a string");
+    }
+
+    function test_getLocaleTime() {
+        var date = new Date();
+        var localeTime = mediabulary.getLocaleTime(date);
+        compare(typeof localeTime, "string", "should return a string");
+        compare(date.toLocaleTimeString().indexOf(localeTime), 0,
+                "should return a substring of Date().toLocaleTimeString()");
+    }
+
+    function test_getDuration() {
+        compare(mediabulary.getDuration(3600), "60 " + qsTr("minutes"),
+                '3600 seconds should be "60 minutes"');
     }
 
 }

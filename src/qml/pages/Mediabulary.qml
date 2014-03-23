@@ -27,7 +27,7 @@ import QtQuick.XmlListModel 2.0
 Page {
     id: page
 
-    property string searchQuery: "Fußball"
+    property string searchQuery: "bank"
 
     XmlListModel {
         id: watchmiModel
@@ -37,11 +37,37 @@ Page {
         namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/epg';"
         query: "/pack/data"
 
-        XmlRole { name: "title"; query: "tit/string()" }
-        XmlRole { name: "extrainfo"; query: "exinf/string()" }
+        XmlRole { name: "titleDeu"; query: 'tit[@lang="deu"]/string()' }
+        XmlRole { name: "titleUnd"; query: 'tit[@lang="und"]/string()' }
+        XmlRole { name: "extraInfo"; query: "exinf/string()" }
         XmlRole { name: "description"; query: "losyn/string()" }
         XmlRole { name: "image"; query: "brdcst/media/url/string()" }
+        XmlRole { name: "timeFrom"; query: "xs:dateTime(time/@strt)" }
+        XmlRole { name: "timeTo"; query: "xs:dateTime(time/@strt)" }
+        XmlRole { name: "duration"; query: "xs:integer(time/@dur)" }
     }
+
+    function getTitles(titleDeu, titleUnd, extraInfo, description) {
+        var title = titleDeu || titleUnd || extraInfo || description;
+        var subtitle = extraInfo;
+        if (!subtitle.length || subtitle === title) {
+            subtitle = description || "";
+        }
+        return [title, subtitle]
+    }
+
+    function getLocaleDate(datetime) {
+        return datetime.toLocaleDateString();
+    }
+
+    function getLocaleTime(datetime) {
+        return datetime.toLocaleTimeString().split(' ')[0];
+    }
+
+    function getDuration(duration) {
+        return (duration / 60) + " " + qsTr("minutes");
+    }
+
 
     SilicaListView {
         id: itemListView
@@ -78,6 +104,7 @@ Page {
                 width: parent.width
 
                 Item {
+                    id: imageItem
                     width: 120
                     height: 100
                     Image {
@@ -90,23 +117,34 @@ Page {
                 }
 
                 Column {
-                    width: parent.width
+                    width: parent.width - imageItem.width;
 
                     Label {
+                        text: getTitles(titleDeu, titleUnd, extraInfo, description)[0]
+
                         width: parent.width
                         color: Theme.primaryColor
+                        elide: Text.ElideRight
                         font.pixelSize: Theme.fontSizeSmall
-                        text: title
                     }
 
                     Label {
+                        text: getLocaleTime(timeFrom) + " | " + getDuration(duration)
+
+                        width: parent.width
+                        color: Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeExtraSmall
+                    }
+
+                    Label {
+                        text: getTitles(titleDeu, titleUnd, extraInfo, description)[1]
+
                         width: parent.width
                         color: Theme.secondaryColor
                         elide: Text.ElideRight
                         wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                        maximumLineCount: 3
+                        maximumLineCount: 2
                         font.pixelSize: Theme.fontSizeExtraSmall
-                        text: extrainfo || description
                     }
                 }
             }
