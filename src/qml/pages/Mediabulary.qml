@@ -32,8 +32,10 @@ Page {
     XmlListModel {
         id: watchmiModel
         source: !page.searchQuery ? ""
-                                  : "http://hackathon.lab.watchmi.tv/api/example.com/broadcasts/limit/64/format/xml-ptv/query/"
-                                    + page.searchQuery
+                                  : ("http://hackathon.lab.watchmi.tv/api/example.com"
+                                     + "/broadcasts/limit/64/format/xml-ptv/query/"
+                                     + page.searchQuery
+                                     + "/day/tomorrow")
         namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/epg';"
         query: "/pack/data"
 
