@@ -39,14 +39,17 @@ Page {
         onStatusChanged: {
             console.log("query: " + learnPage.text);
             if (status === XmlListModel.Ready) {
-                console.log('count: ' + count);
                 for (var i = 0; i < count; i++) {
-                    console.log(i);
                     var item = get(i);
-                    console.log(item.word);
                 }
             }
         }
+    }
+
+    BusyIndicator {
+        anchors.centerIn: parent
+        running: watchmiChannelModel.status === XmlListModel.Loading
+        size: BusyIndicatorSize.Large
     }
 
     SilicaListView {
@@ -66,6 +69,7 @@ Page {
             Label {
                 id: wordLabel
                 text: word
+                color: Theme.highlightColor
                 elide: Text.ElideRight
                 maximumLineCount: 1
 
@@ -77,6 +81,7 @@ Page {
             Label {
                 id: translationLabel
                 text: translation
+                color: Theme.highlightColor
                 visible: false
 
                 elide: Text.ElideRight
