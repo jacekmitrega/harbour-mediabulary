@@ -31,9 +31,25 @@ Page {
     property string image
     property string channel: "NDR"
 
+
+    Component.onCompleted: initTimer.start()
+
+    Timer {
+        id: initTimer
+        interval: 100
+        onTriggered: {
+            pageStack.pushAttached(Qt.resolvedUrl("WebViewPage.qml"),
+                                   {
+                                       title: showDetails.title,
+                                       url: showDetails.deepLink
+                                   });
+        }
+    }
+
+
     SilicaFlickable {
         anchors.fill: parent
-        contentWidth: mainColumn.width;
+        contentWidth: parent.width;
         contentHeight: mainColumn.height
 
         ScrollDecorator { }
