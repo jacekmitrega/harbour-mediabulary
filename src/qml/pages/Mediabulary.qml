@@ -27,7 +27,7 @@ import QtQuick.XmlListModel 2.0
 Page {
     id: page
 
-    property string searchQuery: "bank"
+    property string searchQuery: "hackers"
 
     XmlListModel {
         id: watchmiModel
@@ -37,6 +37,9 @@ Page {
         namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/epg';"
         query: "/pack/data"
 
+        XmlRole { name: "bid"; query: 'xs:integer(@bid)' }
+        XmlRole { name: "pid"; query: 'xs:integer(@pid)' }
+        XmlRole { name: "chid"; query: 'xs:integer(@chid)' }
         XmlRole { name: "titleDeu"; query: 'tit[@lang="deu"]/string()' }
         XmlRole { name: "titleUnd"; query: 'tit[@lang="und"]/string()' }
         XmlRole { name: "extraInfo"; query: "exinf/string()" }
@@ -48,13 +51,14 @@ Page {
         XmlRole { name: "dateFrom"; query: "xs:date(substring(time/@strt,1,10))" }
     }
 
-    function getTitles(titleDeu, titleUnd, extraInfo, description) {
+    function getTexts(titleDeu, titleUnd, extraInfo, description) {
         var title = titleDeu || titleUnd || extraInfo || description;
         var subtitle = extraInfo;
         if (!subtitle.length || subtitle === title) {
             subtitle = description || "";
         }
-        return [title, subtitle]
+        var descr = description || ((title !== extraInfo) ? extraInfo : "");
+        return [title, subtitle, descr]
     }
 
     function getSectionHeader(dateStr) {
@@ -130,9 +134,24 @@ Page {
         }
 
         delegate: ListItem {
+
+            property string deepLink: "http://m.tvdigital.de/tv-sendung/media/bulary/" + bid + "/" + pid
+            property string title: getTexts(titleDeu, titleUnd, extraInfo, description)[0]
+            property string subtitle: getTexts(titleDeu, titleUnd, extraInfo, description)[1]
+
             width: itemListView.width - Theme.paddingMedium * 2
             x: Theme.paddingMedium
             contentHeight: Theme.itemSizeExtraLarge
+
+            onClicked: {
+                pageStack.push(Qt.resolvedUrl("ShowDetails.qml"), {
+                                   deepLink: deepLink,
+                                   image: image,
+                                   title: title,
+                                   subtitle: subtitle,
+                                   description: description
+                               });
+            }
 
             Row {
                 width: parent.width
@@ -154,7 +173,7 @@ Page {
                     width: parent.width - imageItem.width;
 
                     Label {
-                        text: getTitles(titleDeu, titleUnd, extraInfo, description)[0]
+                        text: title
 
                         width: parent.width
                         color: Theme.primaryColor
@@ -171,7 +190,7 @@ Page {
                     }
 
                     Label {
-                        text: getTitles(titleDeu, titleUnd, extraInfo, description)[1]
+                        text: subtitle
 
                         width: parent.width
                         color: Theme.secondaryColor

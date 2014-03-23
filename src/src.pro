@@ -19,6 +19,7 @@ OTHER_FILES = \
     qml/main.qml \
     qml/pages/Mediabulary.qml \
     qml/cover/CoverPage.qml \
-    qml/pages/SearchDialog.qml
+    qml/pages/SearchDialog.qml \
+    qml/pages/ShowDetails.qml
 
 INCLUDEPATH += $$PWD

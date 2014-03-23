@@ -46,31 +46,31 @@ TestCase {
         id: mediabulary
     }
 
-    function test_getTitles() {
-        compare(mediabulary.getTitles("A", "B", "C", "D"),
-                ["A", "C"],
-                "Deu title and extra info subtitle should be selected");
-        compare(mediabulary.getTitles("A", "", "C", ""),
-                ["A", "C"],
-                "Deu title and extra info subtitle should be selected");
-        compare(mediabulary.getTitles("", "B", "", "D"),
-                ["B", "D"],
-                "Und title and description subtitle should be selected");
-        compare(mediabulary.getTitles("A", "B", "", ""),
-                ["A", ""],
-                "Deu title and no subtitle should be selected");
-        compare(mediabulary.getTitles("", "", "C", "D"),
-                ["C", "D"],
-                "Extra info title and description subtitle should be selected");
-        compare(mediabulary.getTitles("", "B", "", ""),
-                ["B", ""],
-                "Und title and no subtitle should be selected");
-        compare(mediabulary.getTitles("", "", "C", ""),
-                ["C", ""],
-                "Extra info title and no subtitle should be selected");
-        compare(mediabulary.getTitles("", "", "", "D"),
-                ["D", "D"],
-                "Both description title and subtitle should be selected");
+    function test_getTexts() {
+        compare(mediabulary.getTexts("A", "B", "C", "D"),
+                ["A", "C", "D"],
+                "Deu title for title, extra info for subtitle and description for description should be selected");
+        compare(mediabulary.getTexts("A", "", "C", ""),
+                ["A", "C", "C"],
+                "Deu title for title and description for subtitle and description should be selected");
+        compare(mediabulary.getTexts("", "B", "", "D"),
+                ["B", "D", "D"],
+                "Und title for title and description for subtitle and description should be selected");
+        compare(mediabulary.getTexts("A", "B", "", ""),
+                ["A", "", ""],
+                "Deu title only for title should be selected");
+        compare(mediabulary.getTexts("", "", "C", "D"),
+                ["C", "D", "D"],
+                "Extra info for title and description for subtitle and description should be selected");
+        compare(mediabulary.getTexts("", "B", "", ""),
+                ["B", "", ""],
+                "Und title only for title should be selected");
+        compare(mediabulary.getTexts("", "", "C", ""),
+                ["C", "", ""],
+                "Extra info title only for subtitle should be selected");
+        compare(mediabulary.getTexts("", "", "", "D"),
+                ["D", "D", "D"],
+                "Description for title, subtitle and description should be selected");
     }
 
     function test_getSectionHeader() {
