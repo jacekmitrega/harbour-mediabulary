@@ -27,14 +27,48 @@ import QtQuick.XmlListModel 2.0
 Page {
     id: page
 
-    property string searchQuery: "hackers"
+    property string searchQuery: "hack"
 
     XmlListModel {
-        id: watchmiModel
+        id: watchmiChannelModel
+        source: "http://hackathon.lab.watchmi.tv/api/example.com/channels/format/xml-ptv/limit/1000"
+        namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/channel';"
+        query: "/Lineup/Ch"
+
+        XmlRole { name: "chid"; query: 'xs:integer(@id)' }
+        XmlRole { name: "longName"; query: 'DName/Long/string()' }
+        XmlRole { name: "shortName"; query: 'DName/Short/string()' }
+        XmlRole { name: "image"; query: "media/url/string()" }
+    }
+
+    function getChannel(chid) {
+        for (var i = 0; i < watchmiChannelModel.count; i++) {
+            var item = watchmiChannelModel.get(i)
+            if (item.chid === chid)
+            {
+                return {
+                    chid: item.chid,
+                    longName: item.longName,
+                    shortName: item.shortName,
+                    image: item.image
+                }
+            }
+        }
+        return {
+            chid: null,
+            longName: "",
+            shortName: "",
+            image: ""
+        }
+    }
+
+
+    XmlListModel {
+        id: watchmiBroadcastModel
         source: !page.searchQuery ? ""
                                   : ("http://hackathon.lab.watchmi.tv/api/example.com"
-                                     + "/broadcasts/limit/64/format/xml-ptv/query/"
-                                     + page.searchQuery
+                                     + "/broadcasts/format/xml-ptv/limit/64"
+                                     + "/query/" + page.searchQuery
                                      + "/day/tomorrow")
         namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/epg';"
         query: "/pack/data"
@@ -115,7 +149,7 @@ Page {
             title: qsTr("Mediabulary")
         }
 
-        model: watchmiModel
+        model: watchmiBroadcastModel
 
         section {
             property: "dateFrom"
@@ -140,6 +174,8 @@ Page {
             property string deepLink: "http://m.tvdigital.de/tv-sendung/media/bulary/" + bid + "/" + pid
             property string title: getTexts(titleDeu, titleUnd, extraInfo, description)[0]
             property string subtitle: getTexts(titleDeu, titleUnd, extraInfo, description)[1]
+            property string channelName: getChannel(chid).longName
+            property variant channel: getChannel(chid)
 
             width: itemListView.width - Theme.paddingMedium * 2
             x: Theme.paddingMedium
@@ -151,7 +187,10 @@ Page {
                                    image: image,
                                    title: title,
                                    subtitle: subtitle,
-                                   description: description
+                                   description: description,
+                                   channelName: channelName,
+                                   timeFrom: getLocaleTime(timeFrom),
+                                   duration: getDuration(duration)
                                });
             }
 
@@ -161,7 +200,7 @@ Page {
                 Item {
                     id: imageItem
                     width: 120
-                    height: 100
+                    height: 90
                     Image {
                         source: image
                         width: 110
@@ -184,10 +223,12 @@ Page {
                     }
 
                     Label {
-                        text: getLocaleTime(timeFrom) + " | " + getDuration(duration)
+                        text: "  »  " + channel.shortName
+                              + "   " + getLocaleTime(timeFrom)
+                              + "   " + getDuration(duration)
 
                         width: parent.width
-                        color: Theme.primaryColor
+                        color: Theme.secondaryColor
                         font.pixelSize: Theme.fontSizeExtraSmall
                     }
 

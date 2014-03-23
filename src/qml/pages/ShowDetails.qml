@@ -29,7 +29,9 @@ Page {
     property string title
     property string description
     property string image
-    property string channel: "NDR"
+    property string channelName
+    property string timeFrom
+    property string duration
 
 
     Component.onCompleted: initTimer.start()
@@ -94,6 +96,50 @@ Page {
                 height: Theme.paddingSmall
                 color: Theme.primaryColor
             }
+
+            Item {
+                id: infoItem
+                width: parent.width
+                height: 120
+
+                Item {
+                    id: imageItem
+                    width: 120
+                    height: 90
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+
+                    Image {
+                        source: image
+                        width: 110
+                        height: 70
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                    }
+                }
+
+                Label {
+                    id: channelNameLabel
+                    text: showDetails.channelName
+                    elide: Text.ElideRight
+                    maximumLineCount: 1
+
+                    anchors.top: parent.top
+                    anchors.left: imageItem.right
+                    anchors.right: parent.right
+                    anchors.margins: Theme.paddingSmall
+                }
+
+                Label {
+                    text: showDetails.timeFrom + "   " + showDetails.duration
+
+                    anchors.top: channelNameLabel.bottom
+                    anchors.left: imageItem.right
+                    anchors.right: parent.right
+                    anchors.margins: Theme.paddingSmall
+                }
+            }
+
 
             Label {
                 width: parent.width
