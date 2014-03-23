@@ -38,7 +38,9 @@ Page {
         query: "/pack/data"
 
         XmlRole { name: "title"; query: "tit/string()" }
+        XmlRole { name: "extrainfo"; query: "exinf/string()" }
         XmlRole { name: "description"; query: "losyn/string()" }
+        XmlRole { name: "image"; query: "brdcst/media/url/string()" }
     }
 
     SilicaListView {
@@ -72,23 +74,40 @@ Page {
             x: Theme.paddingMedium
             contentHeight: Theme.itemSizeExtraLarge
 
-            Column {
+            Row {
                 width: parent.width
 
-                Label {
-                    width: parent.width
-                    color: Theme.primaryColor
-                    font.pixelSize: Theme.fontSizeSmall
-                    text: title
+                Item {
+                    width: 120
+                    height: 100
+                    Image {
+                        source: image
+                        width: 110
+                        height: 70
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                 }
-                Label {
+
+                Column {
                     width: parent.width
-                    color: Theme.secondaryColor
-                    elide: Text.ElideRight
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                    maximumLineCount: 3
-                    font.pixelSize: Theme.fontSizeExtraSmall
-                    text: description
+
+                    Label {
+                        width: parent.width
+                        color: Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeSmall
+                        text: title
+                    }
+
+                    Label {
+                        width: parent.width
+                        color: Theme.secondaryColor
+                        elide: Text.ElideRight
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                        maximumLineCount: 3
+                        font.pixelSize: Theme.fontSizeExtraSmall
+                        text: extrainfo || description
+                    }
                 }
             }
         }
