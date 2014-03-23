@@ -37,7 +37,6 @@ Page {
         XmlRole { name: "translation"; query: 'translation/string()' }
 
         onStatusChanged: {
-            console.log("query: " + learnPage.text);
             if (status === XmlListModel.Ready) {
                 for (var i = 0; i < count; i++) {
                     var item = get(i);
