@@ -22,6 +22,8 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Dialog {
+    id: dialog
+
     property alias text: textInput.text
 
     DialogHeader { id: header }
@@ -35,5 +37,9 @@ Dialog {
         width: parent.width - Theme.paddingMedium
 
         focus: true
+
+        EnterKey.enabled: text.length > 0
+        EnterKey.iconSource: "image://theme/icon-m-enter-accept"
+        EnterKey.onClicked: dialog.accept()
     }
 }
