@@ -30,6 +30,7 @@ Page {
     property string description
     property string image
     property string channelName
+    property string channelShortName
     property string timeFrom
     property string duration
 
@@ -77,7 +78,7 @@ Page {
                 spacing: Theme.paddingMedium
 
                 PageHeader {
-                    title: showDetails.channel
+                    title: showDetails.channelShortName
                 }
 
                 Label {

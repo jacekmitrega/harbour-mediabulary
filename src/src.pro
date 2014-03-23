@@ -21,6 +21,7 @@ OTHER_FILES = \
     qml/cover/CoverPage.qml \
     qml/pages/SearchDialog.qml \
     qml/pages/ShowDetails.qml \
-    qml/pages/WebViewPage.qml
+    qml/pages/WebViewPage.qml \
+    qml/pages/Learn.qml
 
 INCLUDEPATH += $$PWD

@@ -27,7 +27,7 @@ import QtQuick.XmlListModel 2.0
 Page {
     id: page
 
-    property string searchQuery: "hack"
+    property string searchQuery: "politik"
 
     XmlListModel {
         id: watchmiChannelModel
@@ -134,6 +134,11 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr('Vocabulary')
+                onClicked: pageStack.push(Qt.resolvedUrl("Learn.qml"),
+                                             { text: searchQuery });
+            }
+            MenuItem {
                 text: qsTr('Search')
                 onClicked: {
                     var dlg = pageStack.push(Qt.resolvedUrl("SearchDialog.qml"),
@@ -189,6 +194,7 @@ Page {
                                    subtitle: subtitle,
                                    description: description,
                                    channelName: channelName,
+                                   channelShortName: channel.shortName,
                                    timeFrom: getLocaleTime(timeFrom),
                                    duration: getDuration(duration)
                                });
