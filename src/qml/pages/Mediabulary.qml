@@ -32,7 +32,7 @@ Page {
     XmlListModel {
         id: watchmiModel
         source: !page.searchQuery ? ""
-                                  : "http://hackathon.lab.watchmi.tv/api/example.com/broadcasts/limit/12/format/xml-ptv/query/"
+                                  : "http://hackathon.lab.watchmi.tv/api/example.com/broadcasts/limit/64/format/xml-ptv/query/"
                                     + page.searchQuery
         namespaceDeclarations: "declare default element namespace 'http://www.as-guides.com/schema/epg';"
         query: "/pack/data"
@@ -45,6 +45,7 @@ Page {
         XmlRole { name: "timeFrom"; query: "xs:dateTime(time/@strt)" }
         XmlRole { name: "timeTo"; query: "xs:dateTime(time/@strt)" }
         XmlRole { name: "duration"; query: "xs:integer(time/@dur)" }
+        XmlRole { name: "dateFrom"; query: "xs:date(substring(time/@strt,1,10))" }
     }
 
     function getTitles(titleDeu, titleUnd, extraInfo, description) {
@@ -54,6 +55,21 @@ Page {
             subtitle = description || "";
         }
         return [title, subtitle]
+    }
+
+    function getSectionHeader(dateStr) {
+        var date = new Date(dateStr);
+        var now = new Date();
+        if (date.getMonth() === now.getMonth() && date.getDate() === now.getDate()) {
+            return qsTr("TODAY");
+        }
+        now = new Date(now.getTime() + 86400000);
+        if (date.getMonth() === now.getMonth() && date.getDate() === now.getDate()) {
+            return qsTr("TOMORROW");
+        }
+        else {
+            return date.toLocaleDateString();
+        }
     }
 
     function getLocaleDate(datetime) {
@@ -94,6 +110,24 @@ Page {
         }
 
         model: watchmiModel
+
+        section {
+            property: "dateFrom"
+            delegate: BackgroundItem {
+                width: itemListView.width - Theme.paddingMedium * 2
+                height: 3 * Theme.paddingLarge
+                Label {
+                    text: getSectionHeader(section)
+                    color: Theme.secondaryColor
+                    width: parent.width
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.margins: Theme.paddingMedium
+                    font.pixelSize: Theme.fontSizeMedium
+                    font.bold: true
+                }
+            }
+        }
 
         delegate: ListItem {
             width: itemListView.width - Theme.paddingMedium * 2

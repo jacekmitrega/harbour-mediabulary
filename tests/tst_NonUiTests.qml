@@ -73,6 +73,25 @@ TestCase {
                 "Both description title and subtitle should be selected");
     }
 
+    function test_getSectionHeader() {
+        var beforeToday = new Date(new Date().getTime() - 86400000);
+        compare(mediabulary.getSectionHeader(beforeToday.toUTCString()),
+                beforeToday.toLocaleDateString(),
+                "Date should be Locale Date String");
+        var date = new Date();
+        compare(mediabulary.getSectionHeader(date.toUTCString()),
+                qsTr("TODAY"),
+                "Date should be TODAY");
+        var tomorrow = new Date(new Date().getTime() + 86400000);
+        compare(mediabulary.getSectionHeader(tomorrow.toUTCString()),
+                qsTr("TOMORROW"),
+                "Date should be TOMORROW");
+        var afterTomorrow = new Date(new Date().getTime() + 2 * 86400000);
+        compare(mediabulary.getSectionHeader(afterTomorrow.toUTCString()),
+                afterTomorrow.toLocaleDateString(),
+                "Date should be Locale Date String");
+    }
+
     function test_getLocaleDate() {
         var date = new Date();
         compare(typeof mediabulary.getLocaleDate(date), "string",
